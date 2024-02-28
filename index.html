@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Indian Food Guide</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+    .centered-header {
+        text-align: center;
+        font-size: 24px;
+        margin-top: 50px;
+    }
+    .input-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 60px;
+    }
+    .input-container label {
+        margin-bottom: 5px;
+    }
+    .input-container input {
+        margin-bottom: 20px;
+    }
+    .submit-button {
+        display: block;
+        margin: 20px auto;
+        padding: 10px 20px;
+        background-color: #007BFF;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .submit-button:hover {
+        background-color: #0056b3;
+    }
+</style>
+</head>
+<body>
+
+<div class="centered-header">
+    Welcome to the Indian Food Guide!
+</div>
+
+<div class="input-container">
+    <label for="text1">What kind of Indian food are you craving? (sweet, spicy, bitter)</label>
+    <input type="text" id="text1" name="text1">
+
+    <label for="text2">Do you have any specific allergen triggers? (seafood, dairy, soy, nuts, etc.)</label>
+    <input type="text" id="text2" name="text2">
+
+    <label for="text3">What state of India are you in?</label>
+    <input type="text" id="text3" name="text3">
+</div>
+
+<button class="submit-button" type="submit">Submit</button>
+
+</body>
+</html>
