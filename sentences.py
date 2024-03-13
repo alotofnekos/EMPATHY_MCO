@@ -3,6 +3,11 @@ intro_sentences = [
     "Hi! I'm here to recommend you a dish from Indian cuisine that's best for you based on your mood! First, could you tell me a bit about how you're feeling?"
 ]
 
+preferences_sentences = [
+    "Next, I'd like to ask you about your food preferences, allergies, and restrictions to make sure I recommend you the right food.",
+    "Before I give you a recommendation, I'd like to ask you about your food preferences, allergies, and restrictions."
+]
+
 ask_allergy_sentences = [
     "Do you have any allergies to milk, lactose, tree nuts, peanuts, egg, wheat, soy, or shellfish?",
     "A lot of Indian food contains milk, lactose, tree nuts, peanuts, egg, wheat, soy, or shellfish. Do you have any allergies to these?"

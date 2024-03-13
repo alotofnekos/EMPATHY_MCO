@@ -40,14 +40,17 @@ class IndianFoodChatbot:
             user_input = input("Bot: " + self.sentences.intro_sentences[random.randint(len(self.sentences.intro_sentences))] + "\nYou: ")
 
             input_emotion_scores = self.classifier_pipeline(user_input)
-
             self.increment_scores(input_emotion_scores)
 
             ### CONVERSATION LOOP
+            for i in range(3):
+                bot_response = self.conversation_pipeline("User: " + user_input)[0]['generated_text']
+                user_input = input("Bot: " + bot_response + self.sentences.follow_up_sentences[i] + "\nYou: ")
+                input_emotion_scores = self.classifier_pipeline(user_input)
+                self.increment_scores(input_emotion_scores)
 
             print("Bot: " + self.sentences.preferences_sentences[random.randint(len(self.sentences.preferences_sentences))])
             print("Please respond with Yes or No, and type in the names of the ingredients from the list that you are allergic to when I ask.")
-
 
             # Ask for allergies
             user_input = input("Bot: " + self.sentences.ask_allergy_sentences[random.randint(len(self.sentences.ask_allergy_sentences))] + "\nYou: ")
