@@ -18,3 +18,7 @@ ask_spicy_sentences = [
     "Do you like your food to be spicy?"
 ]
 
+end_sentences = [
+    "Based on how you're feeling right now, I recommend you try: ",
+    "Thanks for telling me about how you feel! If you're looking to try Indian food, I recommend you try: "
+]
