@@ -37,60 +37,69 @@ class IndianFoodChatbot:
             self.emotion_scores[key] += scores[0][index]['score']
 
     def chat(self):
-        while True:
-            allergies = []
-            is_vegan = False
-            like_spicy = True
+        allergies = []
+        is_vegan = False
+        like_spicy = True
 
-            conversation = Conversation()
-            bot_random_response = random.choice(self.sentences.intro_sentences)
-            conversation.add_message({"role": "assistant", "content": bot_random_response})
-            user_input = input("Bot: " + bot_random_response + "\nYou: ")
+        conversation = Conversation()
+        bot_random_response = random.choice(self.sentences.intro_sentences)
+        conversation.add_message({"role": "assistant", "content": bot_random_response})
+        user_input = input("Bot: " + bot_random_response + "\nYou: ")
+        conversation.add_message({"role": "user", "content": user_input})
+
+        input_emotion_scores = self.classifier_pipeline(user_input)
+        self.increment_scores(input_emotion_scores)
+
+        ### CONVERSATION LOOP
+        for i in range(3):
+            conversation = self.chatbot(conversation)
+            # print(conversation.messages)
+            bot_response = conversation.messages[-1]["content"]
+            bot_followup_response = self.sentences.followup_sentences[i]
+            bot_response += " " + bot_followup_response
+            conversation.messages[-1]["content"] = bot_response
+            # print(conversation.messages)
+            user_input = input("Bot: " + bot_response + "\nYou: ")
             conversation.add_message({"role": "user", "content": user_input})
 
             input_emotion_scores = self.classifier_pipeline(user_input)
             self.increment_scores(input_emotion_scores)
 
-            ### CONVERSATION LOOP
-            for i in range(3):
-                conversation = self.chatbot(conversation)
-                # print(conversation.messages)
-                bot_response = conversation.messages[-1]["content"]
-                bot_followup_response = self.sentences.followup_sentences[i]
-                bot_response += " " + bot_followup_response
-                conversation.messages[-1]["content"] = bot_response
-                # print(conversation.messages)
-                user_input = input("Bot: " + bot_response + "\nYou: ")
-                conversation.add_message({"role": "user", "content": user_input})
+        print("Bot: " + random.choice(self.sentences.preferences_sentences))
+        print("Please respond with Yes or No, and type in the names of the ingredients from the list that you are allergic to when I ask.")
 
-                input_emotion_scores = self.classifier_pipeline(user_input)
-                self.increment_scores(input_emotion_scores)
+        # Ask for allergies
+        user_input = input("Bot: " + random.choice(self.sentences.ask_allergy_sentences) + "\nYou: ")
+        for ingredient in self.allergy_ingredients:
+            if ingredient in user_input.lower():
+                allergies.append(ingredient)
 
-            print("Bot: " + self.sentences.preferences_sentences[random.randint(len(self.sentences.preferences_sentences))])
-            print("Please respond with Yes or No, and type in the names of the ingredients from the list that you are allergic to when I ask.")
+        # Ask for vegan
+        user_input = input("Bot: " + random.choice(self.sentences.ask_vegan_sentences) + "\nYou: ")
+        if "yes" in user_input.lower():
+            is_vegan = True
 
-            # Ask for allergies
-            user_input = input("Bot: " + self.sentences.ask_allergy_sentences[random.randint(len(self.sentences.ask_allergy_sentences))] + "\nYou: ")
-            for ingredient in self.allergy_ingredients:
-                if ingredient in user_input.lower():
-                    allergies.append(ingredient)
-
-            # Ask for vegan
-            user_input = input("Bot: " + self.sentences.ask_vegan_sentences[random.randint(len(self.sentences.ask_vegan_sentences))] + "\nYou: ")
-            if "yes" in user_input.lower():
-                is_vegan = True
-
-            # Ask for spicy
-            user_input = input("Bot: " + self.sentences.ask_spicy_sentences[random.randint(len(self.sentences.ask_spicy_sentences))] + "\nYou: ")
-            if "no" in user_input.lower():
-                like_spicy = False
+        # Ask for spicy
+        user_input = input("Bot: " + random.choice(self.sentences.ask_spicy_sentences) + "\nYou: ")
+        if "no" in user_input.lower():
+            like_spicy = False
 
 
-            print(f"Bot: I can see that you are feeling {self.get_highest_score()}.")
+        print(f"Bot: I can see that you are feeling {self.get_highest_score()}.")
 
-            if user_input.lower() == "exit":
-                break
+        # TODO: Get food recommendation
+
 
 if __name__ == "__main__":
-    chatbot = IndianFoodChatbot()
-    chatbot.chat()
+    while True:
+        chatbot = IndianFoodChatbot()
+        chatbot.chat()
+
+        continue_chat = input("Would you like to start a new conversation? (Yes/No): ")
+        if "no" in continue_chat.lower():
+            break
+        elif "yes" in continue_chat.lower():
+            continue
+        else:
+            print("Invalid input. Exiting chatbot.")
+            break
