@@ -90,7 +90,7 @@ class IndianFoodChatbot:
             like_spicy = False
 
 
-        print(f"Bot: I can see that you are feeling {self.get_highest_score()}.")
+        print(f"Bot: Overall, I can see that you are feeling {self.get_highest_score()}.")
 
         # TODO: Get food recommendation
 
