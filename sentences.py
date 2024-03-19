@@ -15,8 +15,8 @@ preferences_sentences = [
 ]
 
 ask_allergy_sentences = [
-    "Do you have any allergies to milk, lactose, tree nuts, peanuts, egg, wheat, soy, or shellfish?",
-    "A lot of Indian food contains milk, lactose, tree nuts, peanuts, egg, wheat, soy, or shellfish. Do you have any allergies to these?"
+    "Which of the following ingredients are you allergic to? Milk, lactose, tree nuts, peanuts, egg, wheat, soy, or shellfish?",
+    "A lot of Indian food contains milk, lactose, tree nuts, peanuts, egg, wheat, soy, or shellfish. Which of these do you have allergies to?"
 ]
 
 ask_vegan_sentences = [

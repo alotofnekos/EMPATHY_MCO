@@ -66,21 +66,26 @@ class IndianFoodChatbot:
             self.increment_scores(input_emotion_scores)
 
         print("Bot: " + random.choice(self.sentences.preferences_sentences))
-        print("Please respond with Yes or No, and type in the names of the ingredients from the list that you are allergic to when I ask.")
 
         # Ask for allergies
-        user_input = input("Bot: " + random.choice(self.sentences.ask_allergy_sentences) + "\nYou: ")
+        print("Bot: " + random.choice(self.sentences.ask_allergy_sentences))
+        print("Please type in the names of the ingredients from the list that you are allergic to. If you are not allergic to any of these, type 'None' or leave it blank.")
+        user_input = input("You: ")
         for ingredient in self.allergy_ingredients:
             if ingredient in user_input.lower():
                 allergies.append(ingredient)
 
         # Ask for vegan
-        user_input = input("Bot: " + random.choice(self.sentences.ask_vegan_sentences) + "\nYou: ")
+        print("Bot: " + random.choice(self.sentences.ask_vegan_sentences))
+        print("Please respond with Yes or No.")
+        user_input = input("You: ")
         if "yes" in user_input.lower():
             is_vegan = True
 
         # Ask for spicy
-        user_input = input("Bot: " + random.choice(self.sentences.ask_spicy_sentences) + "\nYou: ")
+        print("Bot: " + random.choice(self.sentences.ask_spicy_sentences))
+        print("Please respond with Yes or No.")
+        user_input = input("You: ")
         if "no" in user_input.lower():
             like_spicy = False
 
