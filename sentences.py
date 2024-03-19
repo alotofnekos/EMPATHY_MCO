@@ -3,7 +3,7 @@ intro_sentences = [
     "Hi! I'm here to recommend you a dish from Indian cuisine that's best for you based on your mood! First, could you tell me a bit about how you're feeling?"
 ]
 
-follow_up_sentences = [
+followup_sentences = [
     "I understand. Could you tell me more about what happened?",
     "Could you tell me more about what you feel regarding that?",
     "I see. Overall, how does that make you feel?"

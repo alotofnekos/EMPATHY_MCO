@@ -1,6 +1,11 @@
-from transformers import pipeline
+# https://huggingface.co/docs/transformers/v4.37.2/en/main_classes/pipelines
+
+
 import random
+
 import pandas as pd
+from transformers import Conversation, pipeline
+
 import sentences
 
 
@@ -8,7 +13,7 @@ class IndianFoodChatbot:
 
     def __init__(self):
         self.classifier_pipeline = pipeline(task="text-classification", model="j-hartmann/emotion-english-distilroberta-base", return_all_scores=True)
-        self.conversation_pipeline = pipeline(task="conversational")
+        self.chatbot = pipeline(task="conversational")
         self.emotion_scores = {
             "anger": 0,
             "disgust": 0,
@@ -23,7 +28,7 @@ class IndianFoodChatbot:
 
     def get_highest_score(self):
         return max(self.emotion_scores, key=self.emotion_scores.get)
-    
+
     def reset_scores(self):
         self.emotion_scores = dict.fromkeys(self.emotion_scores, 0)
 
@@ -37,15 +42,27 @@ class IndianFoodChatbot:
             is_vegan = False
             like_spicy = True
 
-            user_input = input("Bot: " + self.sentences.intro_sentences[random.randint(len(self.sentences.intro_sentences))] + "\nYou: ")
+            conversation = Conversation()
+            bot_random_response = random.choice(self.sentences.intro_sentences)
+            conversation.add_message({"role": "assistant", "content": bot_random_response})
+            user_input = input("Bot: " + bot_random_response + "\nYou: ")
+            conversation.add_message({"role": "user", "content": user_input})
 
             input_emotion_scores = self.classifier_pipeline(user_input)
             self.increment_scores(input_emotion_scores)
 
             ### CONVERSATION LOOP
             for i in range(3):
-                bot_response = self.conversation_pipeline("User: " + user_input)[0]['generated_text']
-                user_input = input("Bot: " + bot_response + self.sentences.follow_up_sentences[i] + "\nYou: ")
+                conversation = self.chatbot(conversation)
+                # print(conversation.messages)
+                bot_response = conversation.messages[-1]["content"]
+                bot_followup_response = self.sentences.followup_sentences[i]
+                bot_response += " " + bot_followup_response
+                conversation.messages[-1]["content"] = bot_response
+                # print(conversation.messages)
+                user_input = input("Bot: " + bot_response + "\nYou: ")
+                conversation.add_message({"role": "user", "content": user_input})
+
                 input_emotion_scores = self.classifier_pipeline(user_input)
                 self.increment_scores(input_emotion_scores)
 
@@ -57,7 +74,7 @@ class IndianFoodChatbot:
             for ingredient in self.allergy_ingredients:
                 if ingredient in user_input.lower():
                     allergies.append(ingredient)
-            
+
             # Ask for vegan
             user_input = input("Bot: " + self.sentences.ask_vegan_sentences[random.randint(len(self.sentences.ask_vegan_sentences))] + "\nYou: ")
             if "yes" in user_input.lower():
@@ -73,3 +90,7 @@ class IndianFoodChatbot:
 
             if user_input.lower() == "exit":
                 break
+
+if __name__ == "__main__":
+    chatbot = IndianFoodChatbot()
+    chatbot.chat()
