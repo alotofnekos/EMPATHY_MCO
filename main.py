@@ -6,6 +6,7 @@ import random
 import pandas as pd
 from transformers import Conversation, pipeline
 
+import recommender
 import sentences
 
 
@@ -96,6 +97,7 @@ class IndianFoodChatbot:
         print(f"Bot: Overall, I can see that you are feeling {self.get_highest_score()}.")
 
         # TODO: Get food recommendation
+        recommender.recommend_dishes(self.get_highest_score().title(), allergies, is_vegan, like_spicy)
 
 
 if __name__ == "__main__":

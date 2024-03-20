@@ -23,7 +23,7 @@ def get_dishes_based_on_mood(mood):
         for ingredient in negative_ingredients["ingredients"]:
             if ingredient.lower() in row["ingredients"].lower():
                 negative_dishes = pd.concat([positive_dishes, indian_food_df[indian_food_df["name"] == row["name"]]])
-    
+
     # Remove duplicate rows in both dataframes
     positive_dishes = positive_dishes.drop_duplicates()
     negative_dishes = negative_dishes.drop_duplicates()
@@ -45,6 +45,7 @@ def recommend_dishes(mood, allergies, is_vegan, like_spicy):
     if not like_spicy:
         positive_dishes = positive_dishes[~positive_dishes['flavor_profile'].str.contains("spicy", case=False)]
 
+    # print(positive_dishes)
     final_recom = positive_dishes.sample(n=3)  # For simplicity, randomly pick three satisfying all conditions
 
     # Check if final_recom is empty
@@ -59,12 +60,13 @@ def recommend_dishes(mood, allergies, is_vegan, like_spicy):
             for ingredient in row['ingredients'].split(","):
                 print(positive_ingredients.loc[positive_ingredients['ingredients'].lower() == ingredient.lower()]["Y Reason"])
     print("Hope you enjoy these dishes once you try them!")
-    
+
 
 # Example call, using placeholders for mood and preferences
-mood = "Joy"  # Placeholder for detected mood after conversation
-allergies = ['milk', 'lactose', 'tree nuts', 'peanuts', 'egg']
-is_vegan = False  # Placeholder for user preference
-like_spicy = True  # Placeholder for user preference
+if __name__ == "__main__":
+    mood = "Sad"  # Placeholder for detected mood after conversation
+    allergies = ['milk', 'lactose', 'tree nuts', 'peanuts', 'egg']
+    is_vegan = False  # Placeholder for user preference
+    like_spicy = True  # Placeholder for user preference
 
-recommend_dishes(mood, allergies, is_vegan, like_spicy)
+    recommend_dishes(mood, allergies, is_vegan, like_spicy)
