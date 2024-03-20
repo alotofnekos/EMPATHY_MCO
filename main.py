@@ -2,19 +2,24 @@
 
 
 import random
+import warnings
 
 import pandas as pd
 from transformers import Conversation, pipeline
+from transformers.utils import logging
 
 import recommender
 import sentences
+
+warnings.filterwarnings("ignore")
+logging.set_verbosity_error()
 
 
 class IndianFoodChatbot:
 
     def __init__(self):
         self.classifier_pipeline = pipeline(task="text-classification", model="j-hartmann/emotion-english-distilroberta-base", return_all_scores=True)
-        self.chatbot = pipeline(task="conversational")
+        self.chatbot = pipeline(task="conversational", model="microsoft/DialoGPT-medium")
         self.emotion_scores = {
             "anger": 0,
             "disgust": 0,
@@ -58,7 +63,7 @@ class IndianFoodChatbot:
             bot_response = conversation.messages[-1]["content"]
             bot_followup_response = self.sentences.followup_sentences[i]
             bot_response += " " + bot_followup_response
-            conversation.messages[-1]["content"] = bot_response
+            # conversation.messages[-1]["content"] = bot_response
             # print(conversation.messages)
             user_input = input("Bot: " + bot_response + "\nYou: ")
             conversation.add_message({"role": "user", "content": user_input})
