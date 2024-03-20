@@ -54,11 +54,25 @@ def recommend_dishes(mood, allergies, is_vegan, like_spicy):
     else:
         print(f"Based on your mood and preferences, I recommend trying the following dishes: ")
         for index, row in final_recom.iterrows():
-            print(f"{row['name']} from the {row['state']} state of the {row['region']} region, which is a {row['course']} dish.")
-            print(f"{row['name']} is a {row['flavor_profile']} dish and is {row['diet']}.")
+            region_string = ""
+            state_string = ""
+            flavor_string = ""
+            if row['region'] != "-1":
+                region_string = f" of the {row['region']} region"
+            if row['state'] != "-1":
+                state_string = f" from the {row['state']} state"
+            # print(type(row['flavor_profile']))
+            if row['flavor_profile'] != "-1":
+                flavor_string = f" is a {row['flavor_profile']} dish and"
+            print(f"{row['name']}{state_string}{region_string}, which is a {row['course']} dish.")
+            print(f"{row['name']}{flavor_string} is {row['diet']}.")
             print(f"{row['name']} contains the ingredients {row['ingredients']}.")
             for ingredient in row['ingredients'].split(","):
-                print(positive_ingredients.loc[positive_ingredients['ingredients'].lower() == ingredient.lower()]["Y Reason"])
+                ingredient = ingredient.strip()
+                if ingredient in positive_ingredients["ingredients"].values:
+                    ingredient_reason = positive_ingredients.loc[positive_ingredients['ingredients'] == ingredient, "Y Reason"].iloc[0]
+                    if isinstance(ingredient_reason, str):
+                        print("  " + ingredient_reason)
     print("Hope you enjoy these dishes once you try them!")
 
 
