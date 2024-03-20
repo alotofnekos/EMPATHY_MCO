@@ -42,6 +42,7 @@ def recommend_dishes(mood, allergies, is_vegan, like_spicy):
         mood_filtered_dishes = mood_filtered_dishes[~mood_filtered_dishes['flavor_profile'].str.contains("spicy", case=False)]
 
     # Select top 3 dishes satisfying all conditions
+    # print(mood_filtered_dishes)
     top_recommendations = mood_filtered_dishes.head(3)
 
     if top_recommendations.empty:
