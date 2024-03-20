@@ -74,6 +74,7 @@ class IndianFoodChatbot:
         for ingredient in self.allergy_ingredients:
             if ingredient in user_input.lower():
                 allergies.append(ingredient)
+        # print(allergies)
 
         # Ask for vegan
         print("Bot: " + random.choice(self.sentences.ask_vegan_sentences))
@@ -81,6 +82,7 @@ class IndianFoodChatbot:
         user_input = input("You: ")
         if "yes" in user_input.lower():
             is_vegan = True
+        # print(is_vegan)
 
         # Ask for spicy
         print("Bot: " + random.choice(self.sentences.ask_spicy_sentences))
@@ -88,6 +90,7 @@ class IndianFoodChatbot:
         user_input = input("You: ")
         if "no" in user_input.lower():
             like_spicy = False
+        # print(like_spicy)
 
 
         print(f"Bot: Overall, I can see that you are feeling {self.get_highest_score()}.")
