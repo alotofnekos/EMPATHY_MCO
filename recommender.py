@@ -63,7 +63,6 @@ def filter_dishes_by_allergens(dishes, allergies, get_good_dishes=True):
 
     # Drop duplicates from bad ingredients
     bad_ingredients = list(set(bad_ingredients))
-    print(bad_ingredients)
 
     # Given the bad ingredients, filter the dishes to remove dishes that contain any of the bad ingredients
     filtered_dishes = pd.DataFrame(columns=dishes.columns)
