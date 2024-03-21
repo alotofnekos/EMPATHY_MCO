@@ -45,7 +45,7 @@
 43,cashews and raisins,,,y,,,,,,['tree nut']
 44,cardamom powder,,,,,,,,,[]
 45,Besan,,,,,,,,,[]
-46,nuts,,,,,,,,,[]
+46,nuts,,,,,,,,,['tree nut']
 47,milk,y,y,,,,,,,"['milk', 'lactose']"
 48,all purpose flour,,,,,,y,,,['wheat']
 49,clarified butter,,,,,,,,,[]
