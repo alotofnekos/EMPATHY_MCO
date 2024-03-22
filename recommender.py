@@ -94,28 +94,30 @@ def recommend_dishes(mood, allergies, is_vegan, like_spicy):
     if not like_spicy:
         positive_dishes = positive_dishes[~positive_dishes['flavor_profile'].str.contains("spicy", case=False)]
 
-    if is_vegan:
-        negative_dishes = negative_dishes[negative_dishes["diet"] == "non vegetarian"]
-    # if allergies:
-    #     allergen_mask = pd.Series(False, index=negative_dishes.index)
-    #     for allergen in allergies:
-    #         # This updates the mask to True for any row where the allergen is found
-    #         allergen_mask |= negative_dishes['ingredients'].str.contains(allergen, case=False)
-    #     negative_dishes = negative_dishes[allergen_mask]
-    if allergies:
-        negative_dishes = filter_dishes_by_allergens(negative_dishes, allergies, get_good_dishes=False)
-    if not like_spicy:
-        negative_dishes = negative_dishes[negative_dishes['flavor_profile'].str.contains("spicy", case=False)]
+    if mood.lower() != "joy" and mood.lower() != "neutral":
+        if is_vegan:
+            negative_dishes = negative_dishes[negative_dishes["diet"] == "non vegetarian"]
+        # if allergies:
+        #     allergen_mask = pd.Series(False, index=negative_dishes.index)
+        #     for allergen in allergies:
+        #         # This updates the mask to True for any row where the allergen is found
+        #         allergen_mask |= negative_dishes['ingredients'].str.contains(allergen, case=False)
+        #     negative_dishes = negative_dishes[allergen_mask]
+        if allergies:
+            negative_dishes = filter_dishes_by_allergens(negative_dishes, allergies, get_good_dishes=False)
+        if not like_spicy:
+            negative_dishes = negative_dishes[negative_dishes['flavor_profile'].str.contains("spicy", case=False)]
 
     final_recom = positive_dishes.sample(n=3)  # For simplicity, randomly pick three satisfying all conditions
     # final_recom = positive_dishes.head(3)
 
     # print(f"after filter: {negative_dishes}")
     # FIXME: Some checks here that are present in recommender.py are missing here
-    negative_dishes_empty = negative_dishes.empty
-    avoid_recom = pd.DataFrame()
-    if not negative_dishes_empty:
-        avoid_recom = negative_dishes.sample(n=3)  # For simplicity, randomly pick three satisfying all conditions
+    if mood.lower() != "joy" and mood.lower() != "neutral":
+        negative_dishes_empty = negative_dishes.empty
+        avoid_recom = pd.DataFrame()
+        if not negative_dishes_empty:
+            avoid_recom = negative_dishes.sample(n=3)  # For simplicity, randomly pick three satisfying all conditions
 
     # Check if final_recom is empty
     if final_recom.empty:
@@ -149,36 +151,37 @@ def recommend_dishes(mood, allergies, is_vegan, like_spicy):
                     if isinstance(ingredient_reason, str):
                         print("  " + ingredient_reason)
 
-    # Check if avoid_recom is empty
-    if negative_dishes_empty:
-        # print("I couldn't find any dishes that you should avoid.")
-        pass
-    else:
-        print(f"Based on your mood and preferences, I recommend avoiding the following dishes: ")
-        for index, row in avoid_recom.iterrows():
-            region_string = ""
-            state_string = ""
-            flavor_string = ""
-            if row['region'] != "-1":
-                region_string = f" of the {row['region']} region"
-            if row['state'] != "-1":
-                state_string = f" from the {row['state']} state"
-            # print(type(row['flavor_profile']))
-            if row['flavor_profile'] != "-1":
-                flavor_string = f" is a {row['flavor_profile']} dish and"
-            print(f"{row['name']}{state_string}{region_string}, which is a {row['course']} dish.")
-            print(f"{row['name']}{flavor_string} is {row['diet']}.")
-            print(f"{row['name']} contains the ingredients {row['ingredients']}.")
-            for ingredient in row['ingredients'].split(","):
-                # print(ingredient)
-                ingredient = ingredient.strip()
-                # print(negative_ingredients)
-                if ingredient in negative_ingredients["ingredients"].values:
-                    # print(negative_ingredients.loc[negative_ingredients['ingredients'] == ingredient, "N Reason"].iloc[0])
-                    ingredient_reason = negative_ingredients.loc[negative_ingredients['ingredients'] == ingredient, "X Reason"].iloc[0]
-                    # print(ingredient_reason)
-                    if isinstance(ingredient_reason, str):
-                        print("  " + ingredient_reason)
+    if mood.lower() != "joy" and mood.lower() != "neutral":
+        # Check if avoid_recom is empty
+        if negative_dishes_empty:
+            # print("I couldn't find any dishes that you should avoid.")
+            pass
+        else:
+            print(f"Based on your mood and preferences, I recommend avoiding the following dishes: ")
+            for index, row in avoid_recom.iterrows():
+                region_string = ""
+                state_string = ""
+                flavor_string = ""
+                if row['region'] != "-1":
+                    region_string = f" of the {row['region']} region"
+                if row['state'] != "-1":
+                    state_string = f" from the {row['state']} state"
+                # print(type(row['flavor_profile']))
+                if row['flavor_profile'] != "-1":
+                    flavor_string = f" is a {row['flavor_profile']} dish and"
+                print(f"{row['name']}{state_string}{region_string}, which is a {row['course']} dish.")
+                print(f"{row['name']}{flavor_string} is {row['diet']}.")
+                print(f"{row['name']} contains the ingredients {row['ingredients']}.")
+                for ingredient in row['ingredients'].split(","):
+                    # print(ingredient)
+                    ingredient = ingredient.strip()
+                    # print(negative_ingredients)
+                    if ingredient in negative_ingredients["ingredients"].values:
+                        # print(negative_ingredients.loc[negative_ingredients['ingredients'] == ingredient, "N Reason"].iloc[0])
+                        ingredient_reason = negative_ingredients.loc[negative_ingredients['ingredients'] == ingredient, "X Reason"].iloc[0]
+                        # print(ingredient_reason)
+                        if isinstance(ingredient_reason, str):
+                            print("  " + ingredient_reason)
 
     print("Hope you enjoy these dishes once you try them!")
 
