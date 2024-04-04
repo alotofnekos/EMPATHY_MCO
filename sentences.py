@@ -4,7 +4,7 @@ intro_sentences = [
 ]
 
 followup_sentences = [
-    "I understand. Could you tell me more about what happened?",
+    "I understand. Is there anything significant that happened to you today?",
     "Could you tell me more about what you feel regarding that?",
     "I see. Overall, how does that make you feel?"
 ]
